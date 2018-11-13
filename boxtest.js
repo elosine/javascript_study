@@ -41,9 +41,11 @@ function time(){
 }
 
 function mainLoop() {
+
+  time();
   update();
   draw();
-  time();
+ //console.log(realnow);
   requestAnimationFrame(mainLoop);
 }
 
