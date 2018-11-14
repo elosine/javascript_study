@@ -1,15 +1,17 @@
 var socket = io();
-socket.on('oscmsg',
+socket.on('gliss1viz',
   function(msg) {
-    let tn = document.createTextNode(msg);
-    document.body.appendChild(tn);
-    console.log('fdsaf');
+    if (msg == 0) {
+      document.getElementById("nframe").style.visibility = "hidden";
+    } else {
+      document.getElementById("nframe").style.visibility = "visible";
+    }
   });
 
 
 VF = Vex.Flow;
 
-// Create an SVG renderer and attach it to the DIV element named "boo".
+// Create an SVG renderer and attach it to the DIV element named "nframe".
 var div = document.getElementById("nframe")
 var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
 
@@ -20,9 +22,6 @@ context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
 
 // Create a stave of width 400 at position 10, 40 on the canvas.
 var stave = new VF.Stave(10, 40, 400);
-
-// Add a clef and time signature.
-stave.addClef("treble").addTimeSignature("4/4");
 
 // Connect it to the rendering context and draw!
 stave.setContext(context).draw();

@@ -5,6 +5,10 @@ var io = require('socket.io')(http);
 
 //Set Up http server
 app.use(express.static('public'));
+
+app.get('/vln1', function(request, response) {
+  response.sendFile(__dirname + '/public/violin1.html');
+});
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/index.html');
 });
@@ -32,6 +36,9 @@ var udpPort = new osc.UDPPort({
 udpPort.on("message", function(msg) {
   console.log(msg);
   //forward message through websockets
-  io.emit('oscmsg', msg.args[3]);
+  if (msg.address == '/gliss1viz') {
+    io.emit('gliss1viz', msg.args[0]);
+  }
+
 });
 udpPort.open();
