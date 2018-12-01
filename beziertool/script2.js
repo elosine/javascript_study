@@ -19,22 +19,10 @@ var gBackCtx;
 var gBezierPath;
 
 var Mode = {
-  kAdding: {
-    value: 0,
-    name: "Adding"
-  },
-  kSelecting: {
-    value: 1,
-    name: "Selecting"
-  },
-  kDragging: {
-    value: 2,
-    name: "Dragging"
-  },
-  kRemoving: {
-    value: 3,
-    name: "Removing"
-  },
+  kAdding : {value: 0, name: "Adding"},
+  kSelecting : {value: 1, name: "Selecting"},
+  kDragging: {value: 2, name: "Dragging"},
+  kRemoving : {value: 3, name: "Removing"},
 };
 
 var gState;
@@ -67,34 +55,34 @@ window.onload = function() {
 
   var selectButton = document.getElementById('selectMode');
   selectButton.addEventListener("click", function() {
-    gState = Mode.kSelecting;
-  }, false);
+      gState = Mode.kSelecting;
+    }, false);
 
   var addButton = document.getElementById('addMode');
   addButton.addEventListener("click", function() {
-    gState = Mode.kAdding;
-  }, false);
+      gState = Mode.kAdding;
+    }, false);
 
   var removeButton = document.getElementById('removeMode');
   removeButton.addEventListener("click", function() {
-    gState = Mode.kRemoving;
-  }, false);
+      gState = Mode.kRemoving;
+    }, false);
 
   var lockButton = document.getElementById('lockControl');
   lockButton.addEventListener("click", function() {
-    ControlPoint.prototype.syncNeighbor = lockButton.checked;
-  }, false);
+      ControlPoint.prototype.syncNeighbor = lockButton.checked;
+    }, false);
 
   var clearButton = document.getElementById('clear');
   clearButton.addEventListener('click', function() {
-    var doDelete = confirm('r u sure u want to delete all');
-    if (doDelete) {
-      gBezierPath = null;
-      gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
-      gCtx.clearRect(0, 0, WIDTH, HEIGHT);
-    }
+      var doDelete = confirm('r u sure u want to delete all');
+      if (doDelete) {
+        gBezierPath = null;
+        gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
+        gCtx.clearRect(0, 0, WIDTH, HEIGHT);
+      }
 
-  }, false);
+    }, false);
 
   var setSrcButton = document.getElementById('addImgSrc');
   setSrcButton.addEventListener('click', function() {
@@ -110,30 +98,31 @@ window.onload = function() {
 
     input.value = '';
 
-  }, false);
+    }, false);
 
 };
 
 // Modified from http://diveintohtml5.org/examples/halma.js
 function getMousePosition(e) {
-  var x;
-  var y;
-  if (e.pageX != undefined && e.pageY != undefined) {
-    x = e.pageX;
-    y = e.pageY;
-  } else {
-    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-  }
-  x -= gCanvas.offsetLeft;
-  y -= gCanvas.offsetTop;
+    var x;
+    var y;
+    if (e.pageX != undefined && e.pageY != undefined) {
+      x = e.pageX;
+      y = e.pageY;
+    }
+    else {
+      x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+      y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    x -= gCanvas.offsetLeft;
+    y -= gCanvas.offsetTop;
 
-  return new Point(x, y);
+    return new Point(x, y);
 }
 
 function handleDown(e) {
   var pos = getMousePosition(e);
-  switch (gState) {
+  switch(gState) {
     case Mode.kAdding:
       handleDownAdd(pos);
       break;
@@ -210,7 +199,8 @@ function render() {
 ///////////////////////////////////////////////////////////////////////////////
 // Classes
 ///////////////////////////////////////////////////////////////////////////////
-function Point(newX, newY) {
+function Point(newX, newY)
+{
   var my = this;
   var xVal = newX;
   var yVal = newY;
@@ -218,11 +208,11 @@ function Point(newX, newY) {
   var RADIUS = 3;
   var SELECT_RADIUS = RADIUS + 2;
 
-  this.x = function() {
+  this.x = function () {
     return xVal;
   }
 
-  this.y = function() {
+  this.y = function () {
     return yVal;
   }
 
@@ -247,8 +237,8 @@ function Point(newX, newY) {
 
   this.offsetFrom = function(pt) {
     return {
-      xDelta: pt.x() - xVal,
-      yDelta: pt.y() - yVal,
+      xDelta : pt.x() - xVal,
+      yDelta : pt.y() - yVal,
     };
   };
 
@@ -291,11 +281,11 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
     return new Point(my.x(), my.y());
   };
 
-  this.x = function() {
-    return my.origin().x() + my.xDelta();
+  this.x = function () {
+    return  my.origin().x() + my.xDelta();
   }
 
-  this.y = function() {
+  this.y = function () {
     return my.origin().y() + my.yDelta();
   }
 
@@ -309,7 +299,7 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
 
   function computeMagnitudeAngleFromOffset(xDelta, yDelta) {
     _magnitude = Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
-    var tryAngle = Math.atan(yDelta / xDelta);
+    var tryAngle = Math.atan(yDelta /xDelta);
     if (!isNaN(tryAngle)) {
       _angle = tryAngle;
       if (xDelta < 0)
@@ -402,62 +392,62 @@ function LineSegment(pt, prev) {
 
 
   this.toJSString = function() {
-    if (my.prev) {
+    if (!my.prev){
+    var sxnorm = (Math.round(my.pt.x())/600).toFixed(4);
+    var synorm = (Math.round(my.pt.y())/450).toFixed(4);
+    /*
+    var ctrlPt1x = 0;
+    var ctrlPt1y = 0;
+    var ctrlPt2x = 0;
+    var ctlrPt2y = 0;
+    var x = 0;
+    var y = 0;
 
+    if (my.ctrlPt1) {
+      ctrlPt1x = Math.round(my.ctrlPt1.x());
+      ctrlPt1y = Math.round(my.ctrlPt1.y());
+    }
+
+    if (my.ctrlPt2) {
+      ctrlPt2x = Math.round(my.ctrlPt2.x());
+      ctrlPt2y = Math.round(my.ctrlPt2.y());
+    }
+    if (my.pt) {
+      x = Math.round(my.pt.x());
+      y = Math.round(my.pt.y());
+    }
+    */
+      return 'var d = [ M' + '(' + '(' + sxnorm + '*w' + ')' + '+ x), '  +  synorm +
+       ' C(' + (my.ctrlPt1x/600).toFixed(4) + '*w' + ')' + ' + x, ' + my.ctrlPt2x;//+ '(' + (Math.round(my.pt.y())/450).toFixed(4) + '*h' + ')'  + ' + y );';
+    }
+    else {
       var ctrlPt1x = 0;
       var ctrlPt1y = 0;
       var ctrlPt2x = 0;
       var ctlrPt2y = 0;
-      var xnorms = 0;
-      var ynorms = 0;
-      var xnorme = 0;
-      var ynorme = 0;
+      var x = 0;
+      var y = 0;
 
       if (my.ctrlPt1) {
-        ctrlPt1x = (my.ctrlPt1.x() / 600).toFixed(4);
-        ctrlPt1y = (my.ctrlPt1.y() / 450).toFixed(4);
+        ctrlPt1x = Math.round(my.ctrlPt1.x());
+        ctrlPt1y = Math.round(my.ctrlPt1.y());
       }
 
       if (my.ctrlPt2) {
-        ctrlPt2x = (my.ctrlPt2.x() / 600).toFixed(4);
-        ctrlPt2y = (my.ctrlPt2.y() / 450).toFixed(4);
-      }
-      if (my.prev.pt) {
-        xnorms = (Math.round(my.prev.pt.x()) / 600).toFixed(4);
-        ynorms = (Math.round(my.prev.pt.y()) / 450).toFixed(4);
+        ctrlPt2x = Math.round(my.ctrlPt2.x());
+        ctrlPt2y = Math.round(my.ctrlPt2.y());
       }
       if (my.pt) {
-        xnorme = (Math.round(my.pt.x()) / 600).toFixed(4);
-        ynorme = (Math.round(my.pt.y()) / 450).toFixed(4);
+        x = Math.round(my.pt.x());
+        y = Math.round(my.pt.y());
       }
-      //    "  var stptx, stpty, ctp1x, ctp1y, ctp2x, ctp2y, endptx, endpty;"
-      //    d.push( 'M' + stptx + ', ' + stpty + 'C' + ctp1x + ', ' + ctp1y + ', ' +
 
-      var mystr = [
-        'stptx = ' + '(' + '(' + xnorms + '*w' + ')' + '+ x);',
-        'stpty = ' + '(' + '(' + ynorms + '*h' + ')' + '+ y);',
-        'ctp1x = ' + '(' + '(' + ctrlPt1x + '*w' + ')' + '+ x);',
-        'ctp1y = ' + '(' + '(' + ctrlPt1y + '*h' + ')' + '+ y);',
-        'ctp2x = ' + '(' + '(' + ctrlPt2x + '*w' + ')' + '+ x);',
-        'ctp2y = ' + '(' + '(' + ctrlPt2y + '*h' + ')' + '+ y);',
-        'endptx = ' + '(' + '(' + xnorme + '*w' + ')' + '+ x);',
-        'endpty = ' + '(' + '(' + ynorme + '*h' + ')' + '+ y);',
-        "d.push( 'M'" + " + " + 'stptx' + ' + ' + "', '" + ' + ' + 'stpty' +
-        ' + ' + "' C'" + ' + ' + 'ctp1x' + ' + ' + "', '" + ' + ' + 'ctp1y' + ' + ' + "', '" +
-        ' + ' + 'ctp2x' + ' + ' + "', '" + ' + ' + 'ctp2y' + ' + ' + "', '" +
-        ' + ' + 'endptx' + ' + ' + "', '" + ' + ' + 'endpty' + ');'
-      ];
-
-      return mystr.join('\n');
-      /*
-
-            return '  ctx.bezierCurveTo(' + ' (' + (ctrlPt1x/600).toFixed(4) + '*w' + ')' + ' + x, ' +
-                    '(' + (ctrlPt1y/500).toFixed(4) + '*h' + ')'  + ' + y, ' +
-                    '(' + (ctrlPt2x/600).toFixed(4) + '*w' + ')'  + ' + x, ' +
-                    '(' + (ctrlPt2y/500).toFixed(4) + '*h' + ')' + ' + y, ' +
-                    '(' + (xnorm/600).toFixed(4) + '*w' + ')'  + ' + x, ' +
-                    '(' + (ynorm/500).toFixed(4) + '*h' + ')' + ' + y );';
-                    */
+      return '  ctx.bezierCurveTo(' + ' (' + (ctrlPt1x/600).toFixed(4) + '*w' + ')' + ' + x, ' +
+              '(' + (ctrlPt1y/500).toFixed(4) + '*h' + ')'  + ' + y, ' +
+              '(' + (ctrlPt2x/600).toFixed(4) + '*w' + ')'  + ' + x, ' +
+              '(' + (ctrlPt2y/500).toFixed(4) + '*h' + ')' + ' + y, ' +
+              '(' + (x/600).toFixed(4) + '*w' + ')'  + ' + x, ' +
+              '(' + (y/500).toFixed(4) + '*h' + ')' + ' + y );';
     }
   }
 
@@ -514,7 +504,8 @@ function LineSegment(pt, prev) {
   };
 }
 
-function BezierPath(startPoint) {
+function BezierPath(startPoint)
+{
   var my = this;
   // Beginning of BezierPath linked list.
   this.head = null;
@@ -585,7 +576,8 @@ function BezierPath(startPoint) {
             rightNeighbor.ctrlPt1 = null;
             rightNeighbor.ctrlPt2 = null;
             my.head.prev = null;
-          } else
+          }
+          else
             my.tail = null;
         }
         // TAIL CASE
@@ -612,31 +604,20 @@ function BezierPath(startPoint) {
   }
 
   this.toJSString = function() {
-    var myString = ['function drawShape(ctx, x, y, w, h, clr, strw) {',
-      '  var ns = "http://www.w3.org/2000/svg";',
-      "  var d = [];",
-      "  var path = [];",
-      "  var stptx, stpty, ctp1x, ctp1y, ctp2x, ctp2y, endptx, endpty;"
-    ];
-
-
-
+    var myString =
+      ['function drawShape(ctx, x, y, w, h, clr, strw) {',
+       '  var ns = "http://www.w3.org/2000/svg";',
+       "  var path = document.createElementNS(svgNS, 'path');",
+       "  path.setAttribute('stroke', clr);",
+       "  path.setAttribute('stroke-width', strw);"
+      ];
 
     var current = my.head;
     while (current != null) {
       myString.push(current.toJSString());
       current = current.next;
     }
-
-    myString.push('for (i = 0; i < d.length; i++) {');
-    myString.push(' var pathtemp = document.createElementNS(svgNS, "path");');
-    myString.push(" pathtemp.setAttribute('stroke', clr);");
-    myString.push(" pathtemp.setAttribute('stroke-width', strw);");
-    myString.push(" pathtemp.setAttribute('d', d[i]);");
-    myString.push(" ctx.appendChild(pathtemp);");
-    myString.push("}");
-
-
+    myString.push('  ctx.stroke();');
     myString.push('}');
     return myString.join('\n');
   }
